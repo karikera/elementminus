@@ -10,4 +10,4 @@ That is all
 Copy two DLLs(`Chakra.dll`, `ChakraCore.dll`) to BDS directory  
 
 ## How to build it
-Use Visual Studio  
+Use Visual Studio 2019  
