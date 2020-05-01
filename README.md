@@ -1,7 +1,7 @@
 
 # Element Minus
-Inspired by [Element Zero](https://github.com/Element-0/ElementZero)  
 Download: [Latest Release](https://github.com/karikera/elementminus/releases/latest)  
+Inspired by [Element Zero](https://github.com/Element-0/ElementZero)  
 
 ## How does this work?
 Load all DLLs in `mods` directory  
