@@ -95,10 +95,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <PostBuildEvent>
-      <Command>@copy "$(OutDir)ChakraCore.dll" "$(SolutionDir)..\bdsx\release\server\ChakraCore.dll"
-@copy "$(OutDir)Chakra.dll" "$(SolutionDir)..\bdsx\release\server\Chakra.dll"</Command>
-    </PostBuildEvent>
+    <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -111,10 +108,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <PostBuildEvent>
-      <Command>@copy "$(OutDir)ChakraCore.dll" "$(SolutionDir)..\bdsx\release\server\ChakraCore.dll"
-@copy "$(OutDir)Chakra.dll" "$(SolutionDir)..\bdsx\release\server\Chakra.dll"</Command>
-    </PostBuildEvent>
+    <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -131,10 +125,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <PostBuildEvent>
-      <Command>@copy "$(OutDir)ChakraCore.dll" "$(SolutionDir)..\bdsx\release\server\ChakraCore.dll"
-@copy "$(OutDir)Chakra.dll" "$(SolutionDir)..\bdsx\release\server\Chakra.dll"</Command>
-    </PostBuildEvent>
+    <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -151,10 +142,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <PostBuildEvent>
-      <Command>@copy "$(OutDir)ChakraCore.dll" "$(SolutionDir)..\bdsx\release\server\ChakraCore.dll"
-@copy "$(OutDir)Chakra.dll" "$(SolutionDir)..\bdsx\release\server\Chakra.dll"</Command>
-    </PostBuildEvent>
+    <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="forward.cpp" />

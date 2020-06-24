@@ -10,7 +10,6 @@
 
 using namespace std;
 
-
 void printErrorCode(DWORD err) noexcept
 {
     wcerr << L"Error Code: " << err << endl;
@@ -258,7 +257,7 @@ BOOL WINAPI DllMain(
     if (fdwReason == DLL_PROCESS_ATTACH)
     {
         setlocale(LC_ALL, "");
-        cout << "Element Minus> Load mods\\*.dll" << endl;
+        cout << "Element Minus: Load mods\\*.dll" << endl;
 
         SetDllDirectoryW(L"mods");
         WIN32_FIND_DATA find;
@@ -268,12 +267,8 @@ BOOL WINAPI DllMain(
             DllDumper dlldumper;
             do
             {
-                wcout << find.cFileName << L": Loading";
-                if (LoadLibraryW(find.cFileName))
-                {
-                    cout << " succeeded" << endl;
-                }
-                else
+                wcout << L"Element Minus: Load " << find.cFileName;
+                if (!LoadLibraryW(find.cFileName))
                 {
                     DWORD err = GetLastError();
                     cout << " failed" << endl;
