@@ -285,7 +285,7 @@ BOOL WINAPI DllMain(
         else
         {
             DWORD err = GetLastError();
-            cerr << L"Cannot read the mods directory: ";
+            cerr << "Cannot read the mods directory: ";
             printErrorCode(err);
             cerr << endl;
         }
