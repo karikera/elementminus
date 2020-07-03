@@ -267,11 +267,11 @@ BOOL WINAPI DllMain(
             DllDumper dlldumper;
             do
             {
-                wcout << L"Element Minus: Load " << find.cFileName;
+                wcout << L"Element Minus: Load " << find.cFileName << endl;
                 if (!LoadLibraryW(find.cFileName))
                 {
                     DWORD err = GetLastError();
-                    cout << " failed" << endl;
+                    cout << "Element Minus: failed" << endl;
                     printErrorCode(err);
                     if (err == ERROR_MOD_NOT_FOUND)
                     {
