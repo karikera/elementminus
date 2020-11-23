@@ -8,26 +8,80 @@
 #include <string>
 #include <unordered_set>
 
-using namespace std;
+#include "resource.h"
+
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::ostream;
+using std::vector;
+using std::unordered_set;
+using std::wstring;
+
+ostream& operator << (ostream& out, LPCWSTR wide) noexcept
+{
+    size_t wlen = lstrlenW(wide);
+    if (wlen > INT_MAX) goto _invalid;
+
+    {
+        char buffer[1024];
+        int len = WideCharToMultiByte(0, 0, wide, (int)wlen, buffer, (int)_countof(buffer), nullptr, nullptr);
+        if (len != 0)
+        {
+            out.write(buffer, len);
+            return out;
+        }
+
+        if (GetLastError() != ERROR_INSUFFICIENT_BUFFER) goto _invalid;
+
+        vector<char> dynamicbuffer;
+        size_t dstsize = 2048;
+        dynamicbuffer.resize(dstsize);
+
+        for (;;)
+        {
+            int len = WideCharToMultiByte(0, 0, wide, (int)wlen, dynamicbuffer.data(), (int)dstsize, nullptr, nullptr);
+            if (len == 0)
+            {
+                if (GetLastError() != ERROR_INSUFFICIENT_BUFFER) goto _invalid;
+                if (dstsize >= INT_MAX) goto _invalid;
+                dstsize *= 2;
+                if (dstsize > INT_MAX) dstsize = INT_MAX;
+                dynamicbuffer.resize(dstsize);
+                continue;
+            }
+            dynamicbuffer.resize(len);
+            break;
+        }
+
+        out.write(dynamicbuffer.data(), dynamicbuffer.size());
+        return out;
+    }
+
+    _invalid:{
+        out << "[Invalid String, len=" << wlen << ']';
+        return out;
+    }
+}
 
 void printErrorCode(DWORD err) noexcept
 {
-    wcerr << L"Error Code: " << err << endl;
+    cerr << "Error Code: " << err << endl;
 
     LPWSTR buffer;
     if (FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, nullptr,
         err, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPWSTR)&buffer, 0, nullptr))
     {
-        wcerr << L"Error Message: " << buffer;
+
+        cerr << "Error Message: " << buffer;
     }
     LocalFree(buffer);
 }
 
-
 class DllDumper
 {
 private:
-    std::unordered_set<std::wstring> m_tested;
+    unordered_set<wstring> m_tested;
 
     bool checkFileInDirectory(LPWSTR dest, size_t dirname_len, LPCWSTR filename) noexcept
     {
@@ -71,14 +125,14 @@ private:
         }
         return 0;
     }
-
+    
     bool FindDll(LPWSTR dest, LPCWSTR filename) noexcept
     {
         int len;
         len = GetModuleFileNameW(nullptr, dest, MAX_PATH);
         len = stripFileNameOfPath(dest, len);
         if (checkFileInDirectory(dest, len, filename)) return true;
-
+        
         WCHAR dlldir[MAX_PATH];
         GetDllDirectoryW(MAX_PATH, dlldir);
         len = GetFullPathNameW(dlldir, MAX_PATH, dest, nullptr);
@@ -168,7 +222,7 @@ public:
         {
             if (*m_pindent == L'¦¢') *m_pindent = L'¦§';
             else *m_pindent = L'¦£';
-            wcerr << m_indent << L' ' << filename << L": not found" << endl;
+            cerr << m_indent << ' ' << filename << ": not found" << endl;
             *m_pindent = L'¦¢';
             return true;
         }
@@ -187,7 +241,7 @@ public:
             IMAGE_DOS_HEADER* dos = (IMAGE_DOS_HEADER*)ptr;
             if (dos->e_magic != 'ZM') // MZ
             {
-                wcerr << m_indent << L' ' << filename << L": Invalid DLL, DOS signature does not match" << endl;
+                cerr << m_indent << ' ' << filename << ": Invalid DLL, DOS signature does not match" << endl;
                 retValue = true;
                 break;
             }
@@ -195,7 +249,7 @@ public:
             IMAGE_NT_HEADERS* nt = (IMAGE_NT_HEADERS*)((uint8_t*)dos + dos->e_lfanew);
             if (nt->Signature != 'EP') // PE\0\0
             {
-                cerr << m_indent << L' ' << filename << L": Invalid DLL, NT signature does not match" << endl;
+                cerr << m_indent << ' ' << filename << ": Invalid DLL, NT signature does not match" << endl;
                 retValue = true;
                 break;
             }
@@ -238,7 +292,7 @@ public:
 
         if (retValue)
         {
-            wcerr << m_indent << L' ' << filename << endl;
+            cerr << m_indent << ' ' << filename << endl;
         }
 
         UnmapViewOfFile(ptr);
@@ -256,8 +310,7 @@ BOOL WINAPI DllMain(
 ) {
     if (fdwReason == DLL_PROCESS_ATTACH)
     {
-        setlocale(LC_ALL, "");
-        cout << "Element Minus: Load mods\\*.dll" << endl;
+        cout << "[EMinus] Version=" VERSION_TEXT ", It will load mods\\*.dll" << endl;
 
         SetDllDirectoryW(L"mods");
         WIN32_FIND_DATA find;
@@ -267,17 +320,25 @@ BOOL WINAPI DllMain(
             DllDumper dlldumper;
             do
             {
-                wcout << L"Element Minus: Load " << find.cFileName << endl;
-                if (!LoadLibraryW(find.cFileName))
+                HMODULE already = GetModuleHandleW(find.cFileName);
+                if (already == nullptr)
                 {
-                    DWORD err = GetLastError();
-                    cout << "Element Minus: failed" << endl;
-                    printErrorCode(err);
-                    if (err == ERROR_MOD_NOT_FOUND)
+                    cout << "[EMinus] mods\\" << find.cFileName << endl;
+                    if (!LoadLibraryW(find.cFileName))
                     {
-                        dlldumper.FindNotFound(find.cFileName);
+                        DWORD err = GetLastError();
+                        cout << "[EMinus] mods\\" << find.cFileName << ": Failed" << endl;
+                        printErrorCode(err);
+                        if (err == ERROR_MOD_NOT_FOUND)
+                        {
+                            dlldumper.FindNotFound(find.cFileName);
+                        }
+                        cerr << endl;
                     }
-                    cerr << endl;
+                }
+                else
+                {
+                    cout << "[EMinus] mods\\" << find.cFileName << " (Already loaded)" << endl;
                 }
             } while (FindNextFileW(handle, &find));
             FindClose(handle);
@@ -285,7 +346,7 @@ BOOL WINAPI DllMain(
         else
         {
             DWORD err = GetLastError();
-            cerr << "Cannot read the mods directory: ";
+            cerr << "[EMinus] Cannot read the mods directory: ";
             printErrorCode(err);
             cerr << endl;
         }
