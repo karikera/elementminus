@@ -110,10 +110,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent />
-    <PostBuildEvent>
-      <Command>copy "$(TargetPath)" "$(UserProfile)\.bds\$(TargetName)"
-copy "$(OutDir)ChakraCore.dll" "$(UserProfile)\.bds\ChakraCore.dll"</Command>
-    </PostBuildEvent>
+    <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -152,9 +149,7 @@ copy "$(OutDir)ChakraCore.dll" "$(UserProfile)\.bds\ChakraCore.dll"</Command>
     </Link>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>call D:\Downloads\ME\.key\cert-sign.cmd "Element Minus" "$(TargetPath)"
-copy "$(TargetPath)" "$(UserProfile)\.bds\$(TargetFilename)"
-copy "$(OutDir)ChakraCore.dll" "$(UserProfile)\.bds\ChakraCore.dll"</Command>
+      <Command>call $(KR_KEY_DIR)\cert-sign.cmd "Element Minus" "$(TargetPath)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
