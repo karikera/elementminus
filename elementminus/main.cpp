@@ -310,8 +310,6 @@ BOOL WINAPI DllMain(
 ) {
     if (fdwReason == DLL_PROCESS_ATTACH)
     {
-        cout << "[EMinus] Version=" VERSION_TEXT ", It will load mods\\*.dll" << endl;
-
         SetDllDirectoryW(L"mods");
         WIN32_FIND_DATA find;
         HANDLE handle = FindFirstFileW(L"mods\\*.dll", &find);
@@ -323,7 +321,6 @@ BOOL WINAPI DllMain(
                 HMODULE already = GetModuleHandleW(find.cFileName);
                 if (already == nullptr)
                 {
-                    cout << "[EMinus] mods\\" << find.cFileName << endl;
                     if (!LoadLibraryW(find.cFileName))
                     {
                         DWORD err = GetLastError();
@@ -335,10 +332,6 @@ BOOL WINAPI DllMain(
                         }
                         cerr << endl;
                     }
-                }
-                else
-                {
-                    cout << "[EMinus] mods\\" << find.cFileName << " (Already loaded)" << endl;
                 }
             } while (FindNextFileW(handle, &find));
             FindClose(handle);

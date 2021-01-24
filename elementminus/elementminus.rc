@@ -51,8 +51,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,6,1
- PRODUCTVERSION 1,0,6,0
+ FILEVERSION 1,0,7,1
+ PRODUCTVERSION 1,0,7,1
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -69,12 +69,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "·ç¾Ækr"
             VALUE "FileDescription", "The DLL Injector through Chakra.dll"
-            VALUE "FileVersion", VERSION_TEXT
+            VALUE "FileVersion", "1.0.7.1"
             VALUE "InternalName", "Chakra.dll"
             VALUE "LegalCopyright", "Copyright (C) 2020"
             VALUE "OriginalFilename", "Chakra.dll"
             VALUE "ProductName", "Element Minus"
-            VALUE "ProductVersion", VERSION_TEXT
+            VALUE "ProductVersion", "1.0.7.1"
         END
     END
     BLOCK "VarFileInfo"
