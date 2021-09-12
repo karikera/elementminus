@@ -310,9 +310,9 @@ BOOL WINAPI DllMain(
 ) {
     if (fdwReason == DLL_PROCESS_ATTACH)
     {
-        SetDllDirectoryW(L"mods");
+        SetDllDirectoryW(L"redstone");
         WIN32_FIND_DATA find;
-        HANDLE handle = FindFirstFileW(L"mods\\*.dll", &find);
+        HANDLE handle = FindFirstFileW(L"redstone\\*.dll", &find);
         if (handle != INVALID_HANDLE_VALUE)
         {
             DllDumper dlldumper;
@@ -324,7 +324,7 @@ BOOL WINAPI DllMain(
                     if (!LoadLibraryW(find.cFileName))
                     {
                         DWORD err = GetLastError();
-                        cout << "[EMinus] mods\\" << find.cFileName << ": Failed" << endl;
+                        cout << "[EMinus] redstone\\" << find.cFileName << ": Failed" << endl;
                         printErrorCode(err);
                         if (err == ERROR_MOD_NOT_FOUND)
                         {
@@ -339,7 +339,7 @@ BOOL WINAPI DllMain(
         else
         {
             DWORD err = GetLastError();
-            cerr << "[EMinus] Cannot read the mods directory: ";
+            cerr << "[EMinus] Cannot read the redstone directory: ";
             printErrorCode(err);
             cerr << endl;
         }
