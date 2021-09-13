@@ -11,7 +11,7 @@ Load all DLLs in `redstone` directory
 That is all
 
 ## How to use this?
-Copy two DLLs(`Chakra.dll`, `ChakraCore.dll`) to your minecraft version directory  
+Copy DLL `Chakra.dll` to your MCBE:x86 version directory  
 
 ## How to build it
-Use Visual Studio 2019  
+Use Visual Studio 2019 with 2015 build tools
